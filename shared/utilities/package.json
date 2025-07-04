@@ -1,0 +1,26 @@
+{
+  "name": "adfinity-ui-utilities",
+  "version": "0.0.0",
+  "description": "Utilities for vue-nestjs-test",
+  "type": "module",
+  "main": "./dist/adfinity-ui-utilities.umd.cjs",
+  "module": "./dist/adfinity-ui-utilities.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "vite build"
+  },
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "require": "./dist/adfinity-ui-utilities.umd.cjs"
+    }
+  },
+  "dependencies": {
+    "adfinity-ui-types": "workspace:^"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3",
+    "vite": "^7.0.0",
+    "vite-plugin-dts": "^4.5.4"
+  }
+}

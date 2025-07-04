@@ -1,0 +1,23 @@
+{
+  "name": "adfinity-ui-types",
+  "version": "0.0.0",
+  "description": "Type definitions for adfinity-ui",
+  "type": "module",
+  "scripts": {
+    "build": "vite build"
+  },
+  "main": "./dist/adfinity-ui-types.umd.cjs",
+  "module": "./dist/adfinity-ui-types.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "require": "./dist/adfinity-ui-types.umd.cjs"
+    }
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3",
+    "vite": "^7.0.0",
+    "vite-plugin-dts": "^4.5.4"
+  }
+}
