@@ -1,6 +1,6 @@
 import { paginate } from '../../utils';
 import { CreateUserSchema, UpdateUserSchema, UserSchema } from 'adfinity-ui-schemas';
-import { PaginationResult } from 'adfinity-ui-types';
+import type { PaginationResult } from 'adfinity-ui-types';
 import { convertQueryStringToSort } from 'adfinity-ui-utilities';
 
 let users: UserSchema[] = [
