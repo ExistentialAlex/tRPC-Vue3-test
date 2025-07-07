@@ -13,7 +13,7 @@ export type UserSchema = z.infer<typeof UserSchema>;
 export const CreateUserSchema = UserSchema.omit({ id: true });
 export type CreateUserSchema = z.infer<typeof CreateUserSchema>;
 
-export const UpdateUserSchema = UserSchema.partial().omit({ id: true });
+export const UpdateUserSchema = UserSchema.partial().required({ id: true });
 export type UpdateUserSchema = z.infer<typeof UpdateUserSchema>;
 
 export const GetUserSchema = z.object({

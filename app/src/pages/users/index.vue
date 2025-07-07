@@ -5,7 +5,6 @@ import type { Row } from '@tanstack/vue-table';
 import { h, resolveComponent, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { PaginatedTable } from '../../components';
-import { useApiPagination } from '@/composables';
 import doublet from 'doublet';
 import { FetchError, ofetch } from 'ofetch';
 import { useQueryPagination } from '@/composables/useQueryPagination';

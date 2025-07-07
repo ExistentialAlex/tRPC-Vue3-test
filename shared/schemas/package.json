@@ -1,7 +1,7 @@
 {
   "name": "adfinity-ui-schemas",
   "version": "0.0.0",
-  "description": "Type definitions for vue-nestjs-test",
+  "description": "Type definitions for adfinity-ui",
   "type": "module",
   "main": "./dist/adfinity-ui-schemas.umd.cjs",
   "module": "./dist/adfinity-ui-schemas.js",

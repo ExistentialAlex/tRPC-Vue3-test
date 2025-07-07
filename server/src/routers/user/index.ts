@@ -3,6 +3,7 @@ import {
   CreateUserSchema,
   GetUserSchema,
   PaginateSchema,
+  UpdateUserSchema,
   UserSchema,
 } from 'adfinity-ui-schemas';
 import { createUser, deleteUser, getUser, getUsers, updateUser } from './user.service';
@@ -17,7 +18,7 @@ export const userRouter = router({
   create: publicProcedure.input(CreateUserSchema).mutation(({ input }) => {
     return createUser(input);
   }),
-  update: publicProcedure.input(UserSchema).mutation(({ input }) => {
+  update: publicProcedure.input(UpdateUserSchema).mutation(({ input }) => {
     return updateUser(input.id, input);
   }),
   delete: publicProcedure.input(GetUserSchema).mutation(({ input }) => {

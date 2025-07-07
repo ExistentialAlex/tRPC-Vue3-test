@@ -1,4 +1,4 @@
-import type { ShapeOf } from 'vue-nestjs-test-types';
+import type { ShapeOf } from 'adfinity-ui-types';
 import type { RouteLocationNormalizedLoaded, RouteMap } from 'vue-router';
 import type { MessageSchema } from '@/i18n/message-schema';
 

@@ -1,9 +1,8 @@
 <script lang="ts" setup>
-import doublet from 'doublet';
-import { FetchError, ofetch } from 'ofetch';
-import { onMounted, ref } from 'vue';
-import type { UserSchema } from 'vue-nestjs-test-schemas';
+import { watch } from 'vue';
 import { useRoute, type RouteLocationNormalized } from 'vue-router';
+import { useQuery } from '@tanstack/vue-query';
+import { client } from '@/composables/trpcClient';
 
 definePage({
   meta: {
@@ -26,28 +25,39 @@ definePage({
 
 const toast = useToast();
 const route = useRoute('/users/[id]');
-const data = ref<UserSchema | undefined>(undefined);
 
-onMounted(async () => {
-  const [err, userData] = await doublet(ofetch<UserSchema>, `/api/users/${route.params.id}`);
+const { error, data, isPending } = useQuery({
+  queryKey: ['user', route.params.id],
+  queryFn: async () =>
+    client.user.get.query({
+      id: Number(route.params.id),
+    }),
+});
 
+watch([error], ([err]) => {
   if (err) {
     toast.add({
       title: 'Error Fetching User',
-      description: (err as FetchError).message || 'An error occurred while fetching user data.',
+      description: err.message || 'An error occurred while fetching user data.',
       color: 'error',
     });
-    return;
   }
-
-  data.value = userData;
 });
 </script>
 
 <template>
-  <div>
-    <h1>User Profile: {{ data?.id }}</h1>
-    <p>Name: {{ data?.name }}</p>
-    <p>Email: {{ data?.jobTitle }}</p>
+  <div class="p-4">
+    <div v-if="isPending">
+      <USkeleton class="h-8 w-48" />
+      <USkeleton class="h-6 w-32 mt-2" />
+      <USkeleton class="h-6 w-64 mt-2" />
+      <USkeleton class="h-6 w-48 mt-2" />
+    </div>
+    <UCard v-else>
+      <template #header> User Details </template>
+      <p><strong>ID:</strong> {{ data?.id }}</p>
+      <p><strong>Name:</strong> {{ data?.name }}</p>
+      <p><strong>Job Title:</strong> {{ data?.jobTitle }}</p>
+    </UCard>
   </div>
 </template>

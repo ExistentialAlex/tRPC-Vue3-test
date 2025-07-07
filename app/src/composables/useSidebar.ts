@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { RouteHrefs } from 'vue-nestjs-test-types';
+import { RouteHrefs } from 'adfinity-ui-types';
 
 export const useSidebar = () => {
   const { t } = useI18n();

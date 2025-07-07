@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import type { UserSchema } from 'vue-nestjs-test-schemas';
+import type { UserSchema } from 'adfinity-ui-schemas';
 
 export const useUserSession = () => {
   const loggedIn = ref(true); // Only true until we implement actual authentication

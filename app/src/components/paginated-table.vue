@@ -1,23 +1,25 @@
 <script lang="ts" setup generic="T extends TableData">
 import type { TableColumn, TableData } from '@nuxt/ui';
-import type { ColumnSort } from 'vue-nestjs-test-types';
+import type { ColumnSort } from 'adfinity-ui-types';
 
 const pagination = defineModel<{
   pageIndex: number;
   pageSize: number;
 }>('pagination', { required: true });
+
 const limit = defineModel<number>('limit', { required: true });
 const page = defineModel<number>('page', { required: true });
 const sort = defineModel<ColumnSort[]>('sort', { required: false });
 
-interface IPaginatedTableProps {
+interface IPaginatedTableProps<T> {
   data: T[];
   loading?: boolean;
   limitItems: number[];
   totalData: number | undefined;
   columns?: TableColumn<T>[];
 }
-defineProps<IPaginatedTableProps>();
+
+defineProps<IPaginatedTableProps<T>>();
 </script>
 
 <template>

@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import doublet from 'doublet';
-import { FetchError, ofetch } from 'ofetch';
 import { reactive } from 'vue';
-import { UpdateUserSchema, UserSchema } from 'vue-nestjs-test-schemas';
-import { useRoute, useRouter, type RouteLocationNormalizedLoaded } from 'vue-router';
+import { CreateUserSchema } from 'adfinity-ui-schemas';
+import { client } from '@/composables/trpcClient';
+import { useMutation } from '@tanstack/vue-query';
+import { useRouter } from 'vue-router';
 
 definePage({
   meta: {
@@ -24,39 +24,41 @@ definePage({
 const toast = useToast();
 const router = useRouter();
 
-const model = reactive<UpdateUserSchema>({
+const model = reactive<CreateUserSchema>({
   name: '',
   jobTitle: '',
 });
 
+const mutation = useMutation({
+    mutationKey: ['createUser'],
+    mutationFn: async () => {
+      return await client.user.create.mutate(model);
+    },
+    onSuccess: (data) => {
+      toast.add({
+        title: 'User Created Successfully',
+        description: `User ${data.name} has been created.`,
+        color: 'success',
+      });
+      router.push(`/users/${data.id}`);
+    },
+    onError: (error) => {
+      toast.add({
+        title: 'Error Creating User',
+        description: error.message || 'An error occurred while creating user data.',
+        color: 'error',
+      });
+    },
+  });
+
 const onSubmit = async () => {
-  const [err, data] = await doublet(ofetch<UserSchema>, '/api/users/create', {
-    method: 'POST',
-    body: model,
-  });
-
-  if (err) {
-    toast.add({
-      title: 'Error Creating User',
-      description: (err as FetchError).message || 'An error occurred while creating user data.',
-      color: 'error',
-    });
-    return;
-  }
-
-  toast.add({
-    title: 'User Created Successfully',
-    description: `User ${data.name} has been created.`,
-    color: 'success',
-  });
-
-  router.push(`/users/${data.id}`);
+  mutation.mutate();
 };
 </script>
 
 <template>
   <div class="p-4">
-    <UForm class="flex flex-col gap-4" :state="model" :schema="UpdateUserSchema" @submit="onSubmit">
+    <UForm class="flex flex-col gap-4" :state="model" :schema="CreateUserSchema" @submit="onSubmit">
       <UFormField label="Name" name="name">
         <UInput v-model="model.name" class="w-full" />
       </UFormField>

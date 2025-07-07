@@ -1,9 +1,11 @@
 <script lang="ts" setup>
 import doublet from 'doublet';
 import { FetchError, ofetch } from 'ofetch';
-import { onMounted, reactive } from 'vue';
-import { UpdateUserSchema, UserSchema } from 'vue-nestjs-test-schemas';
+import { onMounted, reactive, watch } from 'vue';
+import { UpdateUserSchema, UserSchema } from 'adfinity-ui-schemas';
 import { useRoute, useRouter, type RouteLocationNormalizedLoaded } from 'vue-router';
+import { client } from '@/composables/trpcClient';
+import { useMutation, useQuery } from '@tanstack/vue-query';
 
 definePage({
   meta: {
@@ -31,32 +33,61 @@ const route = useRoute('/users/edit/[id]');
 const router = useRouter();
 
 const model = reactive<UpdateUserSchema>({
+  id: Number(route.params.id),
   name: '',
   jobTitle: '',
 });
 
-const onSubmit = async () => {
-  const [err, data] = await doublet(ofetch<UserSchema>, `/api/users/${route.params.id}`, {
-    method: 'PATCH',
-    body: model,
-  });
+const { error, data, isPending } = useQuery({
+  queryKey: ['user', route.params.id],
+  queryFn: async () =>
+    client.user.get.query({
+      id: Number(route.params.id),
+    }),
+});
 
+watch([error], ([err]) => {
   if (err) {
     toast.add({
-      title: 'Error Updating User',
-      description: (err as FetchError).message || 'An error occurred while updating user data.',
+      title: 'Error Fetching User',
+      description: err.message || 'An error occurred while fetching user data.',
       color: 'error',
     });
-    return;
+    router.push('/users');
   }
+});
 
-  toast.add({
-    title: 'User Updated Successfully',
-    description: `User ${data.name} has been updated.`,
-    color: 'success',
-  });
+watch([data], ([userData]) => {
+  if (userData) {
+    model.name = userData.name;
+    model.jobTitle = userData.jobTitle;
+  }
+});
 
-  router.push(`/users/${data.id}`);
+const mutation = useMutation({
+  mutationKey: ['updateUser'],
+  mutationFn: async () => {
+    return await client.user.update.mutate(model);
+  },
+  onSuccess: (data) => {
+    toast.add({
+      title: 'User Updated Successfully',
+      description: `User ${data.name} has been updated.`,
+      color: 'success',
+    });
+    router.push(`/users/${data.id}`);
+  },
+  onError: (error) => {
+    toast.add({
+      title: 'Error Updating User',
+      description: error.message || 'An error occurred while updating user data.',
+      color: 'error',
+    });
+  },
+});
+
+const onSubmit = async () => {
+  mutation.mutate();
 };
 
 onMounted(async () => {

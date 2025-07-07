@@ -1,4 +1,6 @@
 import { useQuery } from '@tanstack/vue-query';
+import type { ColumnSort } from 'adfinity-ui-types';
+import { convertSortToQueryString } from 'adfinity-ui-utilities';
 import { ref, computed, watch } from 'vue';
 
 /**
@@ -23,13 +25,13 @@ import { ref, computed, watch } from 'vue';
  */
 export function useQueryPagination<T>(
   queryKey: any[],
-  queryFn: (params: { page: number; limit: number; search: string; sort: any }) => Promise<T>,
+  queryFn: (params: { page: number; limit: number; search: string; sort: string }) => Promise<T>,
   options: Record<string, any> = {}
 ) {
   const page = ref(1);
   const limit = ref(25);
   const search = ref('');
-  const sort = ref<any>([]);
+  const sort = ref<ColumnSort[]>([]);
   const limitItems = [1, 5, 10, 25, 50];
   const pagination = computed(() => ({
     pageIndex: page.value - 1,
@@ -40,7 +42,7 @@ export function useQueryPagination<T>(
     page: page.value,
     limit: limit.value,
     search: search.value,
-    sort: sort.value,
+    sort: convertSortToQueryString(sort.value),
   }));
 
   const { data, status, error, isFetching, refetch, isPending, isSuccess } = useQuery({
