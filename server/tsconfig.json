@@ -5,4 +5,12 @@
     "noEmit": false
   },
   "include": ["./src/**/*"],
+  "ts-node": {
+    "files": true,
+    "transpileOnly": true,
+    "compilerOptions": {
+      "module": "commonjs",
+      "target": "es2017"
+    }
+  }
 }
