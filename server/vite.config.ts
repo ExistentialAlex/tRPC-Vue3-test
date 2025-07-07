@@ -14,7 +14,7 @@ export default mergeConfig(
       // Rollup conf
       rollupOptions: {
         input: {
-          main: './src/index.ts',
+          main: './src/server.ts',
         },
         output: {
           exports: 'named',
